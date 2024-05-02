@@ -1,17 +1,19 @@
 package com.bloggios.authserver.controller;
 
-import com.bloggios.authserver.constants.ResponseMessageConstants;
 import com.bloggios.authserver.payload.request.RegisterRequest;
 import com.bloggios.authserver.payload.response.ApplicationResponse;
 import com.bloggios.authserver.service.AuthenticationService;
 import com.bloggios.authserver.utils.ApplicationResponseUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Owner - Rohit Parihar and Bloggios

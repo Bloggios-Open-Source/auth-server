@@ -1,4 +1,4 @@
-package com.bloggios.authserver.exception;
+package com.bloggios.authserver.exception.payload;
 
 import lombok.EqualsAndHashCode;
 

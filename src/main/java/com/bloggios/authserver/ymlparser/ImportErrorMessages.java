@@ -2,7 +2,7 @@ package com.bloggios.authserver.ymlparser;
 
 import com.bloggios.authserver.constants.BeanNameConstants;
 import com.bloggios.authserver.constants.InternalErrorCodes;
-import com.bloggios.authserver.exception.InternalException;
+import com.bloggios.authserver.exception.payload.InternalException;
 import com.thoughtworks.xstream.InitializationException;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;

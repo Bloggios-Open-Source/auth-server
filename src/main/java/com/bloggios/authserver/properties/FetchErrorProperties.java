@@ -33,15 +33,32 @@ public class FetchErrorProperties {
         String property = properties.getProperty(code);
         String message = "";
         String field = "";
-        String type = "INTERNAL";
+        String type = "INTERNAL ERROR";
         if (!ObjectUtils.isEmpty(property)) {
             String[] strings = property.split("~");
-            message = strings.length > 0 ? strings[0] : "";
+            message = strings[0];
             field = strings.length > 1 ? strings[1] : "";
         }
         if (code.startsWith("DE")) {
             type = "DATA ERROR";
         }
         return new ExceptionResponse(message, code, field, type, status.name());
+    }
+
+    public ExceptionResponse generateExceptionResponse(HttpStatus status, String message, String code) {
+        String[] split = message.split("~");
+        String field = split.length > 1 ? split[1] : "";
+        String type = "INTERNAL ERROR";
+        if (code.startsWith("DE")) {
+            type = "DATA ERROR";
+        }
+        return ExceptionResponse
+                .builder()
+                .message(split[0])
+                .field(field)
+                .status(status.name())
+                .type(type)
+                .code(code)
+                .build();
     }
 }

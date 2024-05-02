@@ -1,6 +1,8 @@
-package com.bloggios.authserver.exception;
+package com.bloggios.authserver.exception.payload;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Owner - Rohit Parihar and Bloggios
@@ -12,18 +14,18 @@ import lombok.EqualsAndHashCode;
  */
 
 @EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 public class BadRequestException extends ExceptionProvider {
 
     public BadRequestException(String code) {
         super(code);
     }
 
-    public BadRequestException(String code, String message, String field) {
+    public BadRequestException(String code, String message) {
         super(code);
         this.message = message;
-        this.field = field;
     }
 
     private String message;
-    private String field;
 }

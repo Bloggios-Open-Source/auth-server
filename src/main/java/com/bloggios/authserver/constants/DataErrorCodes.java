@@ -19,4 +19,7 @@ import lombok.experimental.UtilityClass;
 public class DataErrorCodes {
 
     public static final String EMAIL_MANDATORY = "DE__AUTH-2001";
+    public static final String EMAIL_NOT_VALID = "DE__AUTH-2002";
+    public static final String PASSWORD_EMPTY = "DE__AUTH-2003";
+    public static final String PASSWORD_CRITERIA_NOT_MATCHED = "DE__AUTH-2004";
 }
