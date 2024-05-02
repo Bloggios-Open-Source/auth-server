@@ -1,0 +1,17 @@
+roles:
+  data:
+    user:
+      id: user
+      name: ROLE_USER
+    dummy:
+      id: dummy
+      name: ROLE_DUMMY
+    manager:
+      id: manager
+      name: ROLE_MANAGER
+    developer:
+      id: developer
+      name: ROLE_DEVELOPER
+    admin:
+      id: admin
+      name: ROLE_ADMIN

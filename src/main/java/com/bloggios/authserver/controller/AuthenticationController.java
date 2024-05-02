@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Owner - Rohit Parihar and Bloggios
  * Author - rohit
@@ -32,7 +34,10 @@ public class AuthenticationController {
     }
 
     @PostMapping(EndpointConstants.AuthenticationController.REGISTER_USER)
-    public ResponseEntity<ApplicationResponse> registerUser(@RequestBody RegisterRequest registerRequest) {
-        return ResponseEntity.ok(authenticationService.registerUser(registerRequest));
+    public ResponseEntity<ApplicationResponse> registerUser(
+            @RequestBody RegisterRequest registerRequest,
+            HttpServletRequest httpServletRequest
+    ) {
+        return ResponseEntity.ok(authenticationService.registerUser(registerRequest, httpServletRequest));
     }
 }

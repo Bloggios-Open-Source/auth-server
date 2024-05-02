@@ -32,3 +32,6 @@ spring:
 
 application:
   version: @version@ #Fetching version from pom.xml
+
+elasticsearch:
+  user: ${ACTIVE_PROFILE:local}.auth-server.user

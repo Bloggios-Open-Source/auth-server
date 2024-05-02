@@ -3,6 +3,8 @@ package com.bloggios.authserver.service;
 import com.bloggios.authserver.payload.request.RegisterRequest;
 import com.bloggios.authserver.payload.response.ApplicationResponse;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Owner - Rohit Parihar and Bloggios
  * Author - rohit
@@ -14,5 +16,5 @@ import com.bloggios.authserver.payload.response.ApplicationResponse;
 
 public interface AuthenticationService {
 
-    ApplicationResponse registerUser(RegisterRequest registerRequest);
+    ApplicationResponse registerUser(RegisterRequest registerRequest, HttpServletRequest httpServletRequest);
 }

@@ -20,4 +20,5 @@ import lombok.experimental.UtilityClass;
 public class InternalErrorCodes {
 
     public static final String EXCEPTION_CODES = "IE__AUTH-1001";
+    public static final String ROLE_NOT_FOUND = "IE__AUTH-1002";
 }

@@ -2,6 +2,8 @@ package com.bloggios.authserver.rules.implementation.exhibitor;
 
 import com.bloggios.authserver.payload.request.RegisterRequest;
 import com.bloggios.authserver.rules.Exhibitor;
+import com.bloggios.authserver.rules.implementation.businessvalidator.EmailValidator;
+import com.bloggios.authserver.rules.implementation.businessvalidator.PasswordValidator;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,8 +18,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class RegisterRequestExhibitor implements Exhibitor<RegisterRequest> {
 
+    private final EmailValidator emailValidator;
+    private final PasswordValidator passwordValidator;
+
+    public RegisterRequestExhibitor
+            (EmailValidator emailValidator,
+             PasswordValidator passwordValidator
+            ) {
+        this.emailValidator = emailValidator;
+        this.passwordValidator = passwordValidator;
+    }
+
     @Override
     public void exhibit(RegisterRequest registerRequest) {
-        
+        emailValidator.validate(registerRequest.getEmail());
+        passwordValidator.validate(registerRequest.getPassword());
     }
 }
