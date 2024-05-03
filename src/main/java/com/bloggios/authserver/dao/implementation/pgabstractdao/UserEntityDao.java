@@ -5,6 +5,8 @@ import com.bloggios.authserver.dao.repository.pgrepository.UserEntityRepository;
 import com.bloggios.authserver.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 /**
  * Owner - Rohit Parihar and Bloggios
  * Author - rohit
@@ -19,5 +21,9 @@ public class UserEntityDao extends PgAbstractDao<UserEntity, UserEntityRepositor
 
     protected UserEntityDao(UserEntityRepository repository) {
         super(repository);
+    }
+
+    public Optional<UserEntity> findByEmailOptional(String email) {
+
     }
 }

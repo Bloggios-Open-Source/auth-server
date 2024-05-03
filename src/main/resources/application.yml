@@ -14,7 +14,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       properties:
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
-        spring.json.trusted.packages: com.bloggios.auth.provider
+        spring.json.trusted.packages: com.bloggios.authserver
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DATABASE}?currentSchema=auth-provider
     hikari:
@@ -32,6 +32,15 @@ spring:
 
 application:
   version: @version@ #Fetching version from pom.xml
+  profile: ${ACTIVE_PROFILE:local}
 
 elasticsearch:
   user: ${ACTIVE_PROFILE:local}.auth-server.user
+
+authentication:
+  key-provider:
+    public-key: classpath:security/pubkey.pem
+    private-key: classpath:security/privkey.pem
+  path-exclude:
+    paths:
+      - /auth-provider/v1/auth/**

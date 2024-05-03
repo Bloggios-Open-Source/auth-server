@@ -3,6 +3,8 @@ package com.bloggios.authserver.dao.repository.esrepository;
 import com.bloggios.authserver.document.UserDocument;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
+import java.util.Optional;
+
 /**
  * Owner - Rohit Parihar and Bloggios
  * Author - rohit
@@ -13,4 +15,6 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
  */
 
 public interface UserDocumentRepository extends ElasticsearchRepository<UserDocument, String> {
+
+    Optional<UserDocument> findByEmailOrUsername(String email, String username);
 }

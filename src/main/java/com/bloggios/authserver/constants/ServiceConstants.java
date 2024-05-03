@@ -29,4 +29,14 @@ public class ServiceConstants {
     public static final String DEFAULT_NORMALIZER = "default_normalizer_keyword";
     public static final String DEFAULT_AUTOCOMPLETE = "default_autocomplete_text";
     public static final String VERBATIM = "verbatim";
+    public static final String AUTHORITY = "authority";
+    public static final String REMOTE_ADDRESS = "remoteAddress";
+    public static final String USER_EMAIL = "userEmail";
+    public static final String ENVIRONMENT = "environment";
+    public static final String TOKEN_TYPE = "type";
+    public static final Object EXTENDED_TOKEN = "extended";
+    public static final Object NORMAL_TOKEN = "normal";
+    public static final String ORIGIN = "origin";
+    public static final String LOCAL_ORIGIN = "bloggios_auth";
+    public static final String AUTHORIZATION = "Authorization";
 }

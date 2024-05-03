@@ -22,4 +22,10 @@ public class DataErrorCodes {
     public static final String EMAIL_NOT_VALID = "DE__AUTH-2002";
     public static final String PASSWORD_EMPTY = "DE__AUTH-2003";
     public static final String PASSWORD_CRITERIA_NOT_MATCHED = "DE__AUTH-2004";
+    public static final String USER_NOT_FOUND = "DE__AUTH-2005";
+    public static final String INCORRECT_PASSWORD = "DE__AUTH-2006";
+    public static final String USER_INACTIVE = "DE__AUTH-2007";
+    public static final String ACCOUNT_EXPIRED = "DE__AUTH-2008";
+    public static final String USER_CREDENTIALS_EXPIRED = "DE__AUTH-2009";
+    public static final String ACCOUNT_LOCKED = "DE__AUTH-2010";
 }

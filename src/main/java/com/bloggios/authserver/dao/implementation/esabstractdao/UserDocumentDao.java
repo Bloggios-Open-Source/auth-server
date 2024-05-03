@@ -1,9 +1,13 @@
 package com.bloggios.authserver.dao.implementation.esabstractdao;
 
+import com.bloggios.authserver.constants.DataErrorCodes;
 import com.bloggios.authserver.dao.EsAbstractDao;
 import com.bloggios.authserver.dao.repository.esrepository.UserDocumentRepository;
 import com.bloggios.authserver.document.UserDocument;
+import com.bloggios.authserver.exception.payload.BadRequestException;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * Owner - Rohit Parihar and Bloggios
@@ -19,5 +23,14 @@ public class UserDocumentDao extends EsAbstractDao<UserDocument, UserDocumentRep
 
     protected UserDocumentDao(UserDocumentRepository repository) {
         super(repository);
+    }
+
+    public UserDocument findById(String userId) {
+        return repository.findById(userId)
+                .orElseThrow(()-> new BadRequestException(DataErrorCodes.USER_NOT_FOUND));
+    }
+
+    public Optional<UserDocument> findByEmailOrUsername(String data) {
+        return repository.findByEmailOrUsername(data, data);
     }
 }
