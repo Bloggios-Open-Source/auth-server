@@ -3,6 +3,8 @@ package com.bloggios.authserver.dao.repository.pgrepository;
 import com.bloggios.authserver.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 /**
  * Owner - Rohit Parihar and Bloggios
  * Author - rohit
@@ -13,4 +15,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 
 public interface UserEntityRepository extends JpaRepository<UserEntity, String> {
+
+    Optional<UserEntity> findByEmail(String email);
 }

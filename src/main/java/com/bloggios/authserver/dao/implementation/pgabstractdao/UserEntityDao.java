@@ -24,6 +24,6 @@ public class UserEntityDao extends PgAbstractDao<UserEntity, UserEntityRepositor
     }
 
     public Optional<UserEntity> findByEmailOptional(String email) {
-
+        return repository.findByEmail(email);
     }
 }
