@@ -19,5 +19,6 @@ public class EndpointConstants {
     public static class AuthenticationController {
         public static final String AUTH_BASE = BASE + "/auth";
         public static final String REGISTER_USER = "/register";
+        public static final String LOGIN_USER = "/login";
     }
 }

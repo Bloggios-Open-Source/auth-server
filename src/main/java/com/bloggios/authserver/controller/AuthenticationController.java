@@ -1,9 +1,12 @@
 package com.bloggios.authserver.controller;
 
 import com.bloggios.authserver.constants.EndpointConstants;
+import com.bloggios.authserver.payload.request.LoginRequest;
 import com.bloggios.authserver.payload.request.RegisterRequest;
 import com.bloggios.authserver.payload.response.ApplicationResponse;
+import com.bloggios.authserver.payload.response.AuthResponse;
 import com.bloggios.authserver.service.AuthenticationService;
+import net.bytebuddy.build.EntryPoint;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Owner - Rohit Parihar and Bloggios
@@ -39,5 +43,16 @@ public class AuthenticationController {
             HttpServletRequest httpServletRequest
     ) {
         return ResponseEntity.ok(authenticationService.registerUser(registerRequest, httpServletRequest));
+    }
+
+    @PostMapping(EndpointConstants.AuthenticationController.LOGIN_USER)
+    public ResponseEntity<AuthResponse> loginUser(
+            @RequestBody LoginRequest loginRequest,
+            HttpServletRequest request,
+            HttpServletResponse response
+            ) {
+        AuthResponse authResponse = authenticationService.loginUser(loginRequest, request, response);
+        if (authResponse.getCookie() != null) response.addCookie(authResponse.getCookie());
+        return ResponseEntity.ok(authResponse);
     }
 }
