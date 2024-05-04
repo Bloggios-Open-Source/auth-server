@@ -15,4 +15,5 @@ import lombok.experimental.UtilityClass;
 public class ResponseMessageConstants {
 
     public static final String REGISTERED_USER = "User registered successfully to Bloggios. Please verify your email to continue";
+    public static final String NO_REFRESH_TOKEN_GENERATED = "No refresh token generated as logged in from local";
 }

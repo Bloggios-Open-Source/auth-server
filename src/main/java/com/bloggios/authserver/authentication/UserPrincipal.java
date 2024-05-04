@@ -53,6 +53,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
     private String userId;
     private String email;
+    private String username;
     private String password;
     private Boolean isEnabled;
     private Boolean isAccountNonExpired;
@@ -64,6 +65,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     public UserPrincipal(
             String userId,
             String email,
+            String username,
             String password,
             Boolean isEnabled,
             Boolean isAccountNonExpired,
@@ -73,6 +75,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     ) {
         this.userId = userId;
         this.email = email;
+        this.username = username;
         this.password = password;
         this.isEnabled = isEnabled;
         this.isAccountNonExpired = isAccountNonExpired;
@@ -87,6 +90,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         return new UserPrincipal(
                 userAuth.getUserId(),
                 userAuth.getEmail(),
+                userAuth.getUsername(),
                 userAuth.getPassword(),
                 userAuth.getIsEnabled(),
                 userAuth.getIsAccountNonExpired(),

@@ -28,4 +28,5 @@ public class DataErrorCodes {
     public static final String ACCOUNT_EXPIRED = "DE__AUTH-2008";
     public static final String USER_CREDENTIALS_EXPIRED = "DE__AUTH-2009";
     public static final String ACCOUNT_LOCKED = "DE__AUTH-2010";
+    public static final String AUTHORITIES_LONG_TOKEN = "DE__AUTH-2011";
 }

@@ -15,7 +15,11 @@ import lombok.experimental.UtilityClass;
 public class EnvironmentConstants {
 
     public static final String APPLICATION_VERSION = "application.version";
-    public static final String USER_INDEX = "#{@environment.getProperty('elasticsearch.user')}";
+    public static final String USER_INDEX = "#{@environment.getProperty('elasticsearch.indices.user')}";
     public static final String ES_SETTING = "/es-setting.json";
     public static final String ACTIVE_PROFILE = "application.profile";
+    public static final String ES_SERVER = "elasticsearch.server";
+    public static final String ES_USERNAME = "elasticsearch.username";
+    public static final String ES_PASSWORD = "elasticsearch.password";
+    public static final String COOKIE_NAME = "application.cookie-name";
 }

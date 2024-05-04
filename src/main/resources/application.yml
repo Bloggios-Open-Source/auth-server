@@ -33,9 +33,14 @@ spring:
 application:
   version: @version@ #Fetching version from pom.xml
   profile: ${ACTIVE_PROFILE:local}
+  cookie-name: ${ACTIVE_PROFILE:local}_bg--auth_mgmt
 
 elasticsearch:
-  user: ${ACTIVE_PROFILE:local}.auth-server.user
+  server: ${ES_SERVER}
+  username: ${ES_USERNAME}
+  password: ${ES_PASSWORD}
+  indices:
+    user: ${ACTIVE_PROFILE:local}.auth-server.user
 
 authentication:
   key-provider:
