@@ -33,5 +33,5 @@ public class RoleDocument {
             type = FieldType.Keyword,
             normalizer = ServiceConstants.DEFAULT_NORMALIZER
     )
-    private String roleName;
+    private String role;
 }

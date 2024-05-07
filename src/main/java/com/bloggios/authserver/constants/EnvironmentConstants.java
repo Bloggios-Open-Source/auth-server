@@ -22,4 +22,8 @@ public class EnvironmentConstants {
     public static final String ES_USERNAME = "elasticsearch.username";
     public static final String ES_PASSWORD = "elasticsearch.password";
     public static final String COOKIE_NAME = "application.cookie-name";
+    public static final String FORGET_PASSWORD_GET_INDEX = "#{@environment.getProperty('elasticsearch.indices.forget-password')}";
+    public static final String REGISTRATION_OTP_GET_INDEX = "#{@environment.getProperty('elasticsearch.indices.registration-otp')}";
+    public static final String MAIL_API_KEY = "application.api-key";
+    public static final String BLOGGIOS_EMAIL_SERVICE_BASE_PATH = "#{@environment.getProperty(feign.email-service)}";
 }

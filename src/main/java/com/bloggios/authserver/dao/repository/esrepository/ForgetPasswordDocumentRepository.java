@@ -21,45 +21,24 @@
  * limitations under the License.
  */
 
-package com.bloggios.authserver.authentication;
+package com.bloggios.authserver.dao.repository.esrepository;
 
-import com.bloggios.authserver.constants.DataErrorCodes;
-import com.bloggios.authserver.dao.implementation.esabstractdao.UserDocumentDao;
-import com.bloggios.authserver.document.UserDocument;
-import com.bloggios.authserver.exception.payload.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.bloggios.authserver.document.ForgetPasswordDocument;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 import java.util.Optional;
 
 /**
  * Owner - Rohit Parihar
  * Author - rohit
- * Project - auth-server
- * Package - com.bloggios.authserver.authentication
- * Created_on - 10 December-2023
- * Created_at - 17 : 14
+ * Project - auth-provider-application
+ * Package - com.bloggios.auth.provider.dao.repository.elasticsearch
+ * Created_on - 15 January-2024
+ * Created_at - 16 : 41
  */
 
-@Service
-public class CustomUserDetailService implements UserDetailsService {
+public interface ForgetPasswordDocumentRepository extends ElasticsearchRepository<ForgetPasswordDocument, String> {
 
-    private final UserDocumentDao userAuthRepository;
-
-    public CustomUserDetailService(
-            UserDocumentDao userAuthRepository
-    ) {
-        this.userAuthRepository = userAuthRepository;
-    }
-
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserDocument> byEmail = userAuthRepository.findByEmailOrUsername(username);
-        if (byEmail.isEmpty()) throw new AuthenticationException(DataErrorCodes.USER_NOT_FOUND);
-        return UserPrincipal.create(byEmail.get());
-    }
+    Optional<ForgetPasswordDocument> findByEmail(String email);
+    Optional<ForgetPasswordDocument> findByUserId(String userId);
 }

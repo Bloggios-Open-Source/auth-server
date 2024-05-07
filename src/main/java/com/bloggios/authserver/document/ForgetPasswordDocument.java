@@ -21,45 +21,59 @@
  * limitations under the License.
  */
 
-package com.bloggios.authserver.authentication;
+package com.bloggios.authserver.document;
 
-import com.bloggios.authserver.constants.DataErrorCodes;
-import com.bloggios.authserver.dao.implementation.esabstractdao.UserDocumentDao;
-import com.bloggios.authserver.document.UserDocument;
-import com.bloggios.authserver.exception.payload.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.bloggios.authserver.constants.EnvironmentConstants;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.Setting;
 
-import java.util.Optional;
+import java.util.Date;
 
 /**
  * Owner - Rohit Parihar
  * Author - rohit
- * Project - auth-server
- * Package - com.bloggios.authserver.authentication
- * Created_on - 10 December-2023
- * Created_at - 17 : 14
+ * Project - auth-provider-application
+ * Package - com.bloggios.auth.provider.document
+ * Created_on - 15 January-2024
+ * Created_at - 16 : 38
  */
 
-@Service
-public class CustomUserDetailService implements UserDetailsService {
+@Document(
+        indexName = EnvironmentConstants.FORGET_PASSWORD_GET_INDEX
+)
+@Setting(
+        shards = 2,
+        sortFields = { "dateGenerated" },
+        sortOrders = {Setting.SortOrder.desc}
+)
+@Getter
+@Setter
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ForgetPasswordDocument {
 
-    private final UserDocumentDao userAuthRepository;
+    @Id
+    private String otpId;
 
-    public CustomUserDetailService(
-            UserDocumentDao userAuthRepository
-    ) {
-        this.userAuthRepository = userAuthRepository;
-    }
+    @Field(type = FieldType.Keyword)
+    private String otp;
 
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserDocument> byEmail = userAuthRepository.findByEmailOrUsername(username);
-        if (byEmail.isEmpty()) throw new AuthenticationException(DataErrorCodes.USER_NOT_FOUND);
-        return UserPrincipal.create(byEmail.get());
-    }
+    @Field(type = FieldType.Date)
+    private Date dateGenerated;
+
+    @Field(type = FieldType.Keyword)
+    private Date expiry;
+
+    @Field(type = FieldType.Keyword)
+    private String userId;
+
+    @Field(type = FieldType.Keyword)
+    private String email;
 }

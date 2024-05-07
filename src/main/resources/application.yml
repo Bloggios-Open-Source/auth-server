@@ -16,7 +16,7 @@ spring:
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
         spring.json.trusted.packages: com.bloggios.authserver
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DATABASE}?currentSchema=auth-provider
+    url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DATABASE}?currentSchema=auth-server
     hikari:
       username: ${POSTGRES_USERNAME} #Postgres Database username
       password: ${POSTGRES_PASSWORD} #Postgres Database password
@@ -29,11 +29,23 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update # To automatically create and update tables
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
 
 application:
   version: @version@ #Fetching version from pom.xml
   profile: ${ACTIVE_PROFILE:local}
   cookie-name: ${ACTIVE_PROFILE:local}_bg--auth_mgmt
+  api-key: ${BLOGGIOS_MAIL_API_KEY}
 
 elasticsearch:
   server: ${ES_SERVER}
@@ -48,4 +60,23 @@ authentication:
     private-key: classpath:security/privkey.pem
   path-exclude:
     paths:
-      - /auth-provider/v1/auth/**
+      - /auth-server/v1/auth/**
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:localhost}
+    enabled: false
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+
+feign:
+  email-service: ${BASE_URL}

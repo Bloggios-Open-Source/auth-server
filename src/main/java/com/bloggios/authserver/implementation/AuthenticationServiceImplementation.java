@@ -6,9 +6,9 @@ import com.bloggios.authserver.constants.EnvironmentConstants;
 import com.bloggios.authserver.constants.ResponseMessageConstants;
 import com.bloggios.authserver.constants.ServiceConstants;
 import com.bloggios.authserver.dao.implementation.pgabstractdao.RefreshTokenEntityDao;
+import com.bloggios.authserver.dao.implementation.pgabstractdao.UserEntityDao;
 import com.bloggios.authserver.document.UserDocument;
 import com.bloggios.authserver.entity.UserEntity;
-import com.bloggios.authserver.enums.DaoStatus;
 import com.bloggios.authserver.exception.payload.AuthenticationException;
 import com.bloggios.authserver.payload.request.LoginRequest;
 import com.bloggios.authserver.payload.request.RegisterRequest;
@@ -16,6 +16,7 @@ import com.bloggios.authserver.payload.response.ApplicationResponse;
 import com.bloggios.authserver.payload.response.AuthResponse;
 import com.bloggios.authserver.persistence.RefreshTokenPersistence;
 import com.bloggios.authserver.persistence.RegisterUserPersistence;
+import com.bloggios.authserver.processor.implementation.process.RegistrationOtpProcessor;
 import com.bloggios.authserver.rules.implementation.exhibitor.LoginRequestExhibitor;
 import com.bloggios.authserver.rules.implementation.exhibitor.RegisterRequestExhibitor;
 import com.bloggios.authserver.service.AuthenticationService;
@@ -59,6 +60,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
     private final RefreshTokenEntityDao refreshTokenEntityDao;
     private final JwtTokenGenerator jwtTokenGenerator;
     private final RefreshTokenPersistence refreshTokenPersistence;
+    private final RegistrationOtpProcessor registrationOtpProcessor;
 
     public AuthenticationServiceImplementation(
             RegisterRequestExhibitor registerRequestExhibitor,
@@ -68,7 +70,8 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
             AuthenticationManager authenticationManager,
             RefreshTokenEntityDao refreshTokenEntityDao,
             JwtTokenGenerator jwtTokenGenerator,
-            RefreshTokenPersistence refreshTokenPersistence
+            RefreshTokenPersistence refreshTokenPersistence,
+            RegistrationOtpProcessor registrationOtpProcessor
     ) {
         this.registerRequestExhibitor = registerRequestExhibitor;
         this.registerRequestToUserEntityTransformer = registerRequestToUserEntityTransformer;
@@ -78,6 +81,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         this.refreshTokenEntityDao = refreshTokenEntityDao;
         this.jwtTokenGenerator = jwtTokenGenerator;
         this.refreshTokenPersistence = refreshTokenPersistence;
+        this.registrationOtpProcessor = registrationOtpProcessor;
     }
 
     @Override
@@ -86,7 +90,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         registerRequestExhibitor.exhibit(registerRequest);
         UserEntity transform = registerRequestToUserEntityTransformer.transform(registerRequest, httpServletRequest);
         UserDocument persist = registerUserPersistence.persist(transform);
-        // Send OTP
+        registrationOtpProcessor.process(transform);
         logger.info("Register User : Time Taken {}", System.currentTimeMillis() - startTime);
         return ApplicationResponse
                 .builder()
@@ -97,12 +101,16 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
 
     @Override
     public AuthResponse loginUser(LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
+        long startTime = System.currentTimeMillis();
         loginRequestExhibitor.exhibit(loginRequest);
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getEntrypoint(),
                 loginRequest.getPassword()
         ));
         UserPrincipal principal = (UserPrincipal) authenticate.getPrincipal();
+        if (!principal.getIsVerified()) {
+            throw new AuthenticationException(DataErrorCodes.USER_NOT_VERIFIED);
+        }
         CompletableFuture.runAsync(()-> refreshTokenEntityDao.deleteByUserId(principal.getUserId()));
         String origin = request.getHeader(ServiceConstants.ORIGIN);
         boolean isLongToken = ObjectUtils.isEmpty(origin);
@@ -114,6 +122,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
             if (!authorities.contains("ROLE_ADMIN") || !authorities.contains("ROLE_DEVELOPER")) {
                 throw new AuthenticationException(DataErrorCodes.AUTHORITIES_LONG_TOKEN);
             }
+            logger.info("Login User (No Cookie) : Time taken {}ms", System.currentTimeMillis() - startTime);
             return AuthResponse
                     .builder()
                     .accessToken(accessToken)
@@ -132,6 +141,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
             cookie.setPath("/");
             cookie.setMaxAge(86400);
             cookie.setDomain(origin);
+            logger.info("Login User : Time taken {}ms", System.currentTimeMillis() - startTime);
             return AuthResponse
                     .builder()
                     .accessToken(accessToken)
