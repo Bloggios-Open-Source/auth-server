@@ -55,6 +55,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     private String email;
     private String username;
     private String password;
+    private Boolean isVerified;
     private Boolean isEnabled;
     private Boolean isAccountNonExpired;
     private Boolean isAccountNonLocked;
@@ -67,6 +68,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
             String email,
             String username,
             String password,
+            Boolean isVerified,
             Boolean isEnabled,
             Boolean isAccountNonExpired,
             Boolean isAccountNonLocked,
@@ -77,6 +79,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.isVerified = isVerified;
         this.isEnabled = isEnabled;
         this.isAccountNonExpired = isAccountNonExpired;
         this.isAccountNonLocked = isAccountNonLocked;
@@ -86,12 +89,13 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
     public static UserPrincipal create(UserDocument userAuth) {
         List<RoleDocument> roles = userAuth.getRoles();
-        List<SimpleGrantedAuthority> collect = roles.stream().map(e -> new SimpleGrantedAuthority(e.getRoleName())).toList();
+        List<SimpleGrantedAuthority> collect = roles.stream().map(e -> new SimpleGrantedAuthority(e.getRole())).toList();
         return new UserPrincipal(
                 userAuth.getUserId(),
                 userAuth.getEmail(),
                 userAuth.getUsername(),
                 userAuth.getPassword(),
+                userAuth.getIsVerified(),
                 userAuth.getIsEnabled(),
                 userAuth.getIsAccountNonExpired(),
                 userAuth.getIsAccountNonLocked(),

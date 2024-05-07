@@ -21,45 +21,20 @@
  * limitations under the License.
  */
 
-package com.bloggios.authserver.authentication;
+package com.bloggios.authserver.dao.repository.esrepository;
 
-import com.bloggios.authserver.constants.DataErrorCodes;
-import com.bloggios.authserver.dao.implementation.esabstractdao.UserDocumentDao;
-import com.bloggios.authserver.document.UserDocument;
-import com.bloggios.authserver.exception.payload.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
+import com.bloggios.authserver.document.RegistrationOtpDocument;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 /**
  * Owner - Rohit Parihar
  * Author - rohit
- * Project - auth-server
- * Package - com.bloggios.authserver.authentication
- * Created_on - 10 December-2023
- * Created_at - 17 : 14
+ * Project - auth-provider-read-service
+ * Package - com.bloggios.auth.provider.read.dao.repository
+ * Created_on - 03 December-2023
+ * Created_at - 00 : 14
  */
 
-@Service
-public class CustomUserDetailService implements UserDetailsService {
-
-    private final UserDocumentDao userAuthRepository;
-
-    public CustomUserDetailService(
-            UserDocumentDao userAuthRepository
-    ) {
-        this.userAuthRepository = userAuthRepository;
-    }
-
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserDocument> byEmail = userAuthRepository.findByEmailOrUsername(username);
-        if (byEmail.isEmpty()) throw new AuthenticationException(DataErrorCodes.USER_NOT_FOUND);
-        return UserPrincipal.create(byEmail.get());
-    }
+public interface RegistrationOtpDocumentRepository extends ElasticsearchRepository<RegistrationOtpDocument, String> {
+    RegistrationOtpDocument findByUserId(String userId);
 }

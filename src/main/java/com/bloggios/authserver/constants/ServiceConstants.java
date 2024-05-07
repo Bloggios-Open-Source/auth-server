@@ -39,4 +39,6 @@ public class ServiceConstants {
     public static final String ORIGIN = "origin";
     public static final String LOCAL_ORIGIN = "bloggios_auth";
     public static final String AUTHORIZATION = "Authorization";
+    public static final Integer MINUTES_7 = 1000 * 60 * 7;
+    public static final String BLOGGIOS_EMAIL_SERVICE_APPLICATION = "bloggios-email-service";
 }

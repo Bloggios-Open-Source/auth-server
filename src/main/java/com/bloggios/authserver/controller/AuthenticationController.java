@@ -6,7 +6,6 @@ import com.bloggios.authserver.payload.request.RegisterRequest;
 import com.bloggios.authserver.payload.response.ApplicationResponse;
 import com.bloggios.authserver.payload.response.AuthResponse;
 import com.bloggios.authserver.service.AuthenticationService;
-import net.bytebuddy.build.EntryPoint;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
