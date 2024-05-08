@@ -5,17 +5,23 @@ import com.bloggios.authserver.constants.DataErrorCodes;
 import com.bloggios.authserver.constants.EnvironmentConstants;
 import com.bloggios.authserver.constants.ResponseMessageConstants;
 import com.bloggios.authserver.constants.ServiceConstants;
+import com.bloggios.authserver.dao.implementation.esabstractdao.RegistrationOtpDocumentDao;
 import com.bloggios.authserver.dao.implementation.pgabstractdao.RefreshTokenEntityDao;
 import com.bloggios.authserver.dao.implementation.pgabstractdao.UserEntityDao;
+import com.bloggios.authserver.document.RegistrationOtpDocument;
 import com.bloggios.authserver.document.UserDocument;
 import com.bloggios.authserver.entity.UserEntity;
+import com.bloggios.authserver.enums.DaoStatus;
 import com.bloggios.authserver.exception.payload.AuthenticationException;
+import com.bloggios.authserver.exception.payload.BadRequestException;
 import com.bloggios.authserver.payload.request.LoginRequest;
 import com.bloggios.authserver.payload.request.RegisterRequest;
 import com.bloggios.authserver.payload.response.ApplicationResponse;
 import com.bloggios.authserver.payload.response.AuthResponse;
 import com.bloggios.authserver.persistence.RefreshTokenPersistence;
 import com.bloggios.authserver.persistence.RegisterUserPersistence;
+import com.bloggios.authserver.persistence.UserDocumentPersistence;
+import com.bloggios.authserver.processor.implementation.independent.ResendOtpProcessor;
 import com.bloggios.authserver.processor.implementation.process.RegistrationOtpProcessor;
 import com.bloggios.authserver.rules.implementation.exhibitor.LoginRequestExhibitor;
 import com.bloggios.authserver.rules.implementation.exhibitor.RegisterRequestExhibitor;
@@ -35,7 +41,9 @@ import org.springframework.util.ObjectUtils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -61,6 +69,10 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
     private final JwtTokenGenerator jwtTokenGenerator;
     private final RefreshTokenPersistence refreshTokenPersistence;
     private final RegistrationOtpProcessor registrationOtpProcessor;
+    private final RegistrationOtpDocumentDao registrationOtpDocumentDao;
+    private final UserEntityDao userEntityDao;
+    private final UserDocumentPersistence userDocumentPersistence;
+    private final ResendOtpProcessor resendOtpProcessor;
 
     public AuthenticationServiceImplementation(
             RegisterRequestExhibitor registerRequestExhibitor,
@@ -71,7 +83,11 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
             RefreshTokenEntityDao refreshTokenEntityDao,
             JwtTokenGenerator jwtTokenGenerator,
             RefreshTokenPersistence refreshTokenPersistence,
-            RegistrationOtpProcessor registrationOtpProcessor
+            RegistrationOtpProcessor registrationOtpProcessor,
+            RegistrationOtpDocumentDao registrationOtpDocumentDao,
+            UserEntityDao userEntityDao,
+            UserDocumentPersistence userDocumentPersistence,
+            ResendOtpProcessor resendOtpProcessor
     ) {
         this.registerRequestExhibitor = registerRequestExhibitor;
         this.registerRequestToUserEntityTransformer = registerRequestToUserEntityTransformer;
@@ -82,6 +98,10 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         this.jwtTokenGenerator = jwtTokenGenerator;
         this.refreshTokenPersistence = refreshTokenPersistence;
         this.registrationOtpProcessor = registrationOtpProcessor;
+        this.registrationOtpDocumentDao = registrationOtpDocumentDao;
+        this.userEntityDao = userEntityDao;
+        this.userDocumentPersistence = userDocumentPersistence;
+        this.resendOtpProcessor = resendOtpProcessor;
     }
 
     @Override
@@ -111,7 +131,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         if (!principal.getIsVerified()) {
             throw new AuthenticationException(DataErrorCodes.USER_NOT_VERIFIED);
         }
-        CompletableFuture.runAsync(()-> refreshTokenEntityDao.deleteByUserId(principal.getUserId()));
+        CompletableFuture.runAsync(() -> refreshTokenEntityDao.deleteByUserId(principal.getUserId()));
         String origin = request.getHeader(ServiceConstants.ORIGIN);
         boolean isLongToken = ObjectUtils.isEmpty(origin);
         if (origin.isEmpty()) origin = ServiceConstants.LOCAL_ORIGIN;
@@ -135,7 +155,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
                     .build();
         } else {
             String refreshToken = jwtTokenGenerator.generateRefreshToken(authenticate, origin, remoteAddress);
-            CompletableFuture.runAsync(()-> refreshTokenPersistence.persist(refreshToken, principal, accessToken));
+            CompletableFuture.runAsync(() -> refreshTokenPersistence.persist(refreshToken, principal, accessToken));
             Cookie cookie = new Cookie(EnvironmentConstants.COOKIE_NAME, refreshToken);
             cookie.setHttpOnly(!origin.contains("localhost"));
             cookie.setPath("/");
@@ -154,5 +174,74 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
                     .cookie(cookie)
                     .build();
         }
+    }
+
+    @Override
+    public ApplicationResponse verifyOtp(String otp, String userId) {
+        long startTime = System.currentTimeMillis();
+        if (otp == null || ObjectUtils.isEmpty(otp))
+            throw new BadRequestException(DataErrorCodes.OTP_EMPTY);
+        if (userId == null || ObjectUtils.isEmpty(userId))
+            throw new BadRequestException(DataErrorCodes.USER_ID_NOT_PRESENT_VERIFY_OTP);
+        RegistrationOtpDocument registrationOtpDocument = registrationOtpDocumentDao.findByUserId(userId);
+        UserEntity userEntity = userEntityDao.findById(userId);
+        if (!registrationOtpDocument.getOtp().equals(otp)) {
+            throw new BadRequestException(DataErrorCodes.OTP_NOT_VALID);
+        }
+        if (userEntity.getIsVerified()) {
+            throw new BadRequestException(DataErrorCodes.USER_ALREADY_VERIFIED);
+        }
+        if (registrationOtpDocument.getExpiry().before(new Date())) {
+            throw new BadRequestException(DataErrorCodes.EXPIRED_OTP);
+        }
+        userEntity.setIsVerified(true);
+        userEntity.setDateUpdated(new Date());
+        registrationOtpDocumentDao.deleteById(registrationOtpDocument.getOtpId());
+        UserEntity response = userEntityDao.initOperation(DaoStatus.UPDATE, userEntity);
+        UserDocument userDocument = userDocumentPersistence.persist(response);
+        logger.info("Execution time for verifyOtp is {}ms", System.currentTimeMillis() - startTime);
+        return ApplicationResponse
+                .builder()
+                .message(ResponseMessageConstants.OTP_VERIFIED_SUCCESSFULLY)
+                .userId(userDocument.getUserId())
+                .build();
+    }
+
+    @Override
+    public ApplicationResponse resendOtp(String userId) {
+        long startTime = System.currentTimeMillis();
+        Optional<RegistrationOtpDocument> registrationOtpDocumentOptional = registrationOtpDocumentDao.findByUserIdOptional(userId);
+        int timesent = 1;
+        if (registrationOtpDocumentOptional.isPresent()) {
+            RegistrationOtpDocument registrationOtpDocument = registrationOtpDocumentOptional.get();
+            timesent = registrationOtpDocument.getTimesSent();
+            registrationOtpDocumentDao.deleteById(registrationOtpDocument.getOtpId());
+            if (registrationOtpDocument.getTimesSent() >= 4) {
+                throw new BadRequestException(DataErrorCodes.OTP_RESEND_LIMIT_EXCEED);
+            }
+        }
+        UserEntity userEntity = userEntityDao.findById(userId);
+        resendOtpProcessor.process(userEntity, timesent + 1);
+        logger.info("Execution time for resendOtp is {}ms", System.currentTimeMillis() - startTime);
+        return ApplicationResponse
+                .builder()
+                .message(ResponseMessageConstants.OTP_RESENT)
+                .userId(userId)
+                .build();
+    }
+
+    @Override
+    public ApplicationResponse otpRedirectUserId(LoginRequest loginRequest) {
+        return null;
+    }
+
+    @Override
+    public ApplicationResponse logoutUser(HttpServletRequest request, HttpServletResponse response) {
+        return null;
+    }
+
+    @Override
+    public AuthResponse refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
+        return null;
     }
 }

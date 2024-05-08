@@ -1,9 +1,13 @@
 package com.bloggios.authserver.dao.implementation.esabstractdao;
 
+import com.bloggios.authserver.constants.DataErrorCodes;
 import com.bloggios.authserver.dao.EsAbstractDao;
 import com.bloggios.authserver.dao.repository.esrepository.RegistrationOtpDocumentRepository;
 import com.bloggios.authserver.document.RegistrationOtpDocument;
+import com.bloggios.authserver.exception.payload.BadRequestException;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * Owner - Rohit Parihar and Bloggios
@@ -19,5 +23,18 @@ public class RegistrationOtpDocumentDao extends EsAbstractDao<RegistrationOtpDoc
 
     protected RegistrationOtpDocumentDao(RegistrationOtpDocumentRepository repository) {
         super(repository);
+    }
+
+    public RegistrationOtpDocument findByUserId(String userId) {
+        return repository.findByUserId(userId)
+                .orElseThrow(()-> new BadRequestException(DataErrorCodes.USER_NOT_PRESENT_FOR_OTP));
+    }
+
+    public Optional<RegistrationOtpDocument> findByUserIdOptional(String userId) {
+        return repository.findByUserId(userId);
+    }
+
+    public void deleteById(String otpId) {
+        repository.deleteById(otpId);
     }
 }

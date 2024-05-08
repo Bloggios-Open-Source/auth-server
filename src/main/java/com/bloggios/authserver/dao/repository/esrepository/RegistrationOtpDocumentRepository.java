@@ -26,6 +26,8 @@ package com.bloggios.authserver.dao.repository.esrepository;
 import com.bloggios.authserver.document.RegistrationOtpDocument;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
+import java.util.Optional;
+
 /**
  * Owner - Rohit Parihar
  * Author - rohit
@@ -36,5 +38,5 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
  */
 
 public interface RegistrationOtpDocumentRepository extends ElasticsearchRepository<RegistrationOtpDocument, String> {
-    RegistrationOtpDocument findByUserId(String userId);
+    Optional<RegistrationOtpDocument> findByUserId(String userId);
 }

@@ -16,4 +16,6 @@ public class ResponseMessageConstants {
 
     public static final String REGISTERED_USER = "User registered successfully to Bloggios. Please verify your email to continue";
     public static final String NO_REFRESH_TOKEN_GENERATED = "No refresh token generated as logged in from local";
+    public static final String OTP_VERIFIED_SUCCESSFULLY = "Verified Successfully";
+    public static final String OTP_RESENT = "OTP sent to your mail address";
 }
