@@ -8,6 +8,7 @@ import com.bloggios.authserver.enums.Provider;
 import com.bloggios.authserver.payload.request.RegisterRequest;
 import com.bloggios.authserver.utils.IpUtils;
 import org.springframework.core.env.Environment;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,13 +33,16 @@ public class RegisterRequestToUserEntityTransformer {
 
     private final Environment environment;
     private final RoleEntityDao roleEntityDao;
+    private final PasswordEncoder passwordEncoder;
 
     public RegisterRequestToUserEntityTransformer(
             Environment environment,
-            RoleEntityDao roleEntityDao
+            RoleEntityDao roleEntityDao,
+            PasswordEncoder passwordEncoder
     ) {
         this.environment = environment;
         this.roleEntityDao = roleEntityDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserEntity transform(RegisterRequest registerRequest, HttpServletRequest httpServletRequest) {
@@ -61,7 +65,7 @@ public class RegisterRequestToUserEntityTransformer {
         return UserEntity
                 .builder()
                 .email(registerRequest.getEmail())
-                .password(registerRequest.getPassword())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .username(registerRequest.getEmail()) // To be changed
                 .dateRegistered(new Date())
                 .isEnabled(true)

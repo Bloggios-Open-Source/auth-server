@@ -31,7 +31,7 @@ public class RegistrationOtpProcessor implements Process<UserEntity> {
 
     @Override
     public void process(UserEntity userEntity) {
-        if (userEntity.getIsEnabled()) {
+        if (userEntity.getIsVerified()) {
             logger.error("User already enabled, so not sending OTP");
         } else {
             sendRegistrationOtp.sendOtpMail(userEntity, 1);

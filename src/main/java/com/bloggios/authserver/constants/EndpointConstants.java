@@ -20,5 +20,6 @@ public class EndpointConstants {
         public static final String AUTH_BASE = BASE + "/auth";
         public static final String REGISTER_USER = "/register";
         public static final String LOGIN_USER = "/login";
+        public static final String VERIFY_OTP = "/verify-otp";
     }
 }

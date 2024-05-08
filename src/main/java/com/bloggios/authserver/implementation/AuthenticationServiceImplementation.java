@@ -138,7 +138,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         CompletableFuture.runAsync(() -> refreshTokenEntityDao.deleteByUserId(principal.getUserId()));
         String origin = request.getHeader(ServiceConstants.ORIGIN);
         boolean isLongToken = ObjectUtils.isEmpty(origin);
-        if (origin.isEmpty()) origin = ServiceConstants.LOCAL_ORIGIN;
+        if (origin == null) origin = ServiceConstants.LOCAL_ORIGIN;
         String remoteAddress = IpUtils.getRemoteAddress(request);
         String accessToken = jwtTokenGenerator.generateAccessToken(authenticate, origin, isLongToken, remoteAddress);
         List<String> authorities = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
