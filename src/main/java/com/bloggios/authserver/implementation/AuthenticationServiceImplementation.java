@@ -108,6 +108,10 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
     public ApplicationResponse registerUser(RegisterRequest registerRequest, HttpServletRequest httpServletRequest) {
         long startTime = System.currentTimeMillis();
         registerRequestExhibitor.exhibit(registerRequest);
+        Optional<UserEntity> byEmailOptional = userEntityDao.findByEmailOptional(registerRequest.getEmail());
+        if (byEmailOptional.isPresent()) {
+            throw new BadRequestException(DataErrorCodes.EMAIL_ALREADY_REGISTERED);
+        }
         UserEntity transform = registerRequestToUserEntityTransformer.transform(registerRequest, httpServletRequest);
         UserDocument persist = registerUserPersistence.persist(transform);
         registrationOtpProcessor.process(transform);
