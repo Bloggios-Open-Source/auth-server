@@ -1,8 +1,10 @@
 package com.bloggios.authserver.dao.implementation.pgabstractdao;
 
+import com.bloggios.authserver.constants.DataErrorCodes;
 import com.bloggios.authserver.dao.PgAbstractDao;
 import com.bloggios.authserver.dao.repository.pgrepository.UserEntityRepository;
 import com.bloggios.authserver.entity.UserEntity;
+import com.bloggios.authserver.exception.payload.BadRequestException;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -25,5 +27,10 @@ public class UserEntityDao extends PgAbstractDao<UserEntity, UserEntityRepositor
 
     public Optional<UserEntity> findByEmailOptional(String email) {
         return repository.findByEmail(email);
+    }
+
+    public UserEntity findById(String userId) {
+        return repository.findById(userId)
+                .orElseThrow(()-> new BadRequestException(DataErrorCodes.USER_NOT_FOUND));
     }
 }

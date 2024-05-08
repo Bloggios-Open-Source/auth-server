@@ -21,4 +21,9 @@ public interface AuthenticationService {
 
     ApplicationResponse registerUser(RegisterRequest registerRequest, HttpServletRequest httpServletRequest);
     AuthResponse loginUser(LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response);
+    ApplicationResponse verifyOtp(String otp, String userId);
+    ApplicationResponse resendOtp(String userId);
+    ApplicationResponse otpRedirectUserId(LoginRequest loginRequest);
+    ApplicationResponse logoutUser(HttpServletRequest request, HttpServletResponse response);
+    AuthResponse refreshAccessToken(HttpServletRequest request, HttpServletResponse response);
 }

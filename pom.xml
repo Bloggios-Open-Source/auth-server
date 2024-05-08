@@ -229,6 +229,7 @@
                         <exclude>com/bloggios/authserver/utils/**</exclude>
                         <exclude>com/bloggios/authserver/processor/VoidProcess.class</exclude>
                         <exclude>com/bloggios/authserver/transformer/Transform.class</exclude>
+                        <exclude>com/bloggios/authserver/document/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
