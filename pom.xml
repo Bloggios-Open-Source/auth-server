@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.bloggios.auth-server</groupId>
     <artifactId>auth-server</artifactId>
-    <version>1.0</version>
+    <version>1</version>
     <name>auth-server</name>
     <description>auth-server</description>
     <properties>
