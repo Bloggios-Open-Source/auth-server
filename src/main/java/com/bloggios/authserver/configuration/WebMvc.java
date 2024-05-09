@@ -52,7 +52,7 @@ public class WebMvc {
                 "http://localhost:2000",
                 "https://bloggios.com",
                 "https://bloggios.cloud",
-                "https://www.bloggios.cloud",
+                "https://api.bloggios.in",
                 "https://www.bloggios.com"
         ));
         corsConfig.setMaxAge(3600L);
