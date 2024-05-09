@@ -7,10 +7,8 @@ import com.bloggios.authserver.payload.response.ApplicationResponse;
 import com.bloggios.authserver.payload.response.AuthResponse;
 import com.bloggios.authserver.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,5 +51,10 @@ public class AuthenticationController {
         AuthResponse authResponse = authenticationService.loginUser(loginRequest, request, response);
         if (authResponse.getCookie() != null) response.addCookie(authResponse.getCookie());
         return ResponseEntity.ok(authResponse);
+    }
+
+    @GetMapping(EndpointConstants.AuthenticationController.VERIFY_OTP)
+    public ResponseEntity<ApplicationResponse> verifyOtp(@RequestHeader("otp") String otp, @RequestParam String userId) {
+        return ResponseEntity.ok(authenticationService.verifyOtp(otp, userId));
     }
 }

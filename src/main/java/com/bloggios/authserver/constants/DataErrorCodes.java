@@ -38,4 +38,5 @@ public class DataErrorCodes {
     public static final String OTP_NOT_VALID = "DE__AUTH-2018";
     public static final String OTP_RESEND_LIMIT_EXCEED = "DE__AUTH-2019";
     public static final String PROVIDER_NOT_EMAIL_RESEND_OTP = "DE__AUTH-2020";
+    public static final String EMAIL_ALREADY_REGISTERED = "DE__AUTH-2021";
 }

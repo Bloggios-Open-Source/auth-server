@@ -1,3 +1,5 @@
+server:
+  port: 8001
 spring:
   application:
     name: auth-server # Application name
@@ -53,6 +55,8 @@ elasticsearch:
   password: ${ES_PASSWORD}
   indices:
     user: ${ACTIVE_PROFILE:local}.auth-server.user
+    registration-otp: ${ACTIVE_PROFILE:local}.auth-server.registration-otp
+    forget-password: ${ACTIVE_PROFILE:local}.auth-server.forget-password
 
 authentication:
   key-provider:

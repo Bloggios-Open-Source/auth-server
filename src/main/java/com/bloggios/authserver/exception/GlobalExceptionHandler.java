@@ -1,6 +1,7 @@
 package com.bloggios.authserver.exception;
 
 import com.bloggios.authserver.constants.ServiceConstants;
+import com.bloggios.authserver.exception.payload.AuthenticationException;
 import com.bloggios.authserver.exception.payload.BadRequestException;
 import com.bloggios.authserver.payload.response.ExceptionResponse;
 import com.bloggios.authserver.properties.FetchErrorProperties;
@@ -44,6 +45,27 @@ public class GlobalExceptionHandler {
         }
         logger.error("""
                 BadRequestException Occurred : {}
+                Message : {}
+                Field : {}
+                Code : {}
+                Type : {}
+                """,
+                MDC.get(ServiceConstants.BREADCRUMB_ID),
+                exceptionResponse.getMessage(),
+                exceptionResponse.getField(),
+                exceptionResponse.getCode(),
+                exceptionResponse.getType());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ExceptionResponse> handleAuthenticationException(AuthenticationException authenticationException) {
+        ExceptionResponse exceptionResponse = fetchErrorProperties.exceptionResponse(HttpStatus.UNAUTHORIZED, authenticationException.getCode());
+        if (Objects.nonNull(authenticationException.getMessage())) {
+            exceptionResponse = fetchErrorProperties.generateExceptionResponse(HttpStatus.BAD_REQUEST, authenticationException.getMessage(), authenticationException.getCode());
+        }
+        logger.error("""
+                Authentication Exception Occurred : {}
                 Message : {}
                 Field : {}
                 Code : {}
