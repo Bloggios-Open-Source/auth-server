@@ -146,7 +146,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
             if (!authorities.contains("ROLE_ADMIN") || !authorities.contains("ROLE_DEVELOPER")) {
                 throw new AuthenticationException(DataErrorCodes.AUTHORITIES_LONG_TOKEN);
             }
-            logger.info("Login User (No Cookie) : Time taken {}ms", System.currentTimeMillis() - startTime);
+            logger.info("Execution Time Login User (No Cookie) : Time taken {}ms", System.currentTimeMillis() - startTime);
             return AuthResponse
                     .builder()
                     .accessToken(accessToken)
@@ -165,7 +165,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
             cookie.setPath("/");
             cookie.setMaxAge(86400);
             cookie.setDomain(origin);
-            logger.info("Login User : Time taken {}ms", System.currentTimeMillis() - startTime);
+            logger.info("Execution Time Login User : Time taken {}ms", System.currentTimeMillis() - startTime);
             return AuthResponse
                     .builder()
                     .accessToken(accessToken)
@@ -203,7 +203,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         registrationOtpDocumentDao.deleteById(registrationOtpDocument.getOtpId());
         UserEntity response = userEntityDao.initOperation(DaoStatus.UPDATE, userEntity);
         UserDocument userDocument = userDocumentPersistence.persist(response);
-        logger.info("Execution time for verifyOtp is {}ms", System.currentTimeMillis() - startTime);
+        logger.info("Execution time Verify OTP is {}ms", System.currentTimeMillis() - startTime);
         return ApplicationResponse
                 .builder()
                 .message(ResponseMessageConstants.OTP_VERIFIED_SUCCESSFULLY)
@@ -226,7 +226,7 @@ public class AuthenticationServiceImplementation implements AuthenticationServic
         }
         UserEntity userEntity = userEntityDao.findById(userId);
         resendOtpProcessor.process(userEntity, timesent + 1);
-        logger.info("Execution time for resendOtp is {}ms", System.currentTimeMillis() - startTime);
+        logger.info("Execution time Resend OTP is {}ms", System.currentTimeMillis() - startTime);
         return ApplicationResponse
                 .builder()
                 .message(ResponseMessageConstants.OTP_RESENT)
