@@ -26,6 +26,14 @@
 </a>
 </p>
 
+### Introduction
+The authentication server serves as the backbone for all authentication-related functions within a system. It handles essential tasks such as user login, registration, social login integration, cookie management, and one-time password (OTP) management.
+User authentication, including login and registration processes, is efficiently managed by the auth server, ensuring secure access to the system's resources. It verifies user credentials, authenticates users, and issues access tokens or session identifiers upon successful authentication.
+Moreover, the auth server seamlessly integrates social login functionality, allowing users to authenticate using their social media accounts such as Google, Facebook, or Twitter. This enhances user experience by providing alternative authentication methods and leveraging existing social media credentials.
+Additionally, the auth server is responsible for managing user sessions and cookies. It generates and maintains session tokens or cookies to track user authentication status across multiple requests, ensuring a smooth and secure browsing experience for authenticated users.
+Furthermore, the auth server handles OTP management, enabling the generation and validation of one-time passwords for additional security measures. This functionality is commonly used for two-factor authentication (2FA) or account recovery processes, adding an extra layer of security to user accounts.
+Overall, the auth server plays a crucial role in ensuring the security and integrity of the system by managing authentication processes, integrating social login options, handling session management, and facilitating OTP-based authentication. Its robust functionality streamlines user authentication and enhances the overall security posture of the application.
+
 ### Software Required
 
 - Java 17
