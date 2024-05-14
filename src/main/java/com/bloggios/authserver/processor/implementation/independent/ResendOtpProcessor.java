@@ -6,8 +6,6 @@ import com.bloggios.authserver.enums.Provider;
 import com.bloggios.authserver.exception.payload.BadRequestException;
 import org.springframework.stereotype.Component;
 
-import java.security.AuthProvider;
-
 /**
  * Owner - Rohit Parihar and Bloggios
  * Author - rohit

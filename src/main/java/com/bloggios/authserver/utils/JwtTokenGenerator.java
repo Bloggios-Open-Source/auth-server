@@ -79,6 +79,7 @@ public class JwtTokenGenerator {
                 .expiresAt(now.plus(Boolean.TRUE.equals(isLong) ? 20 : 2, ChronoUnit.MINUTES))
                 .subject(principal.getUserId())
                 .claim(ServiceConstants.AUTHORITY, roles)
+                .claim(ServiceConstants.USERNAME, principal.getUsername())
                 .claim(ServiceConstants.USER_EMAIL, principal.getEmail())
                 .claim(ServiceConstants.ENVIRONMENT, Objects.requireNonNull(environment.getProperty(ACTIVE_PROFILE)))
                 .claim(ServiceConstants.TOKEN_TYPE, isLong ? ServiceConstants.EXTENDED_TOKEN : ServiceConstants.NORMAL_TOKEN)

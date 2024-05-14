@@ -26,7 +26,6 @@ package com.bloggios.authserver.document;
 import com.bloggios.authserver.constants.EnvironmentConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import org.springframework.core.env.Environment;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;

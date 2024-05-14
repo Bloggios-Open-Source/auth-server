@@ -39,4 +39,5 @@ public class DataErrorCodes {
     public static final String OTP_RESEND_LIMIT_EXCEED = "DE__AUTH-2019";
     public static final String PROVIDER_NOT_EMAIL_RESEND_OTP = "DE__AUTH-2020";
     public static final String EMAIL_ALREADY_REGISTERED = "DE__AUTH-2021";
+    public static final String ACCOUNT_TYPE_VALUE_NOT_FOUND = "DE__AUTH-2022";
 }

@@ -34,6 +34,9 @@ Additionally, the auth server is responsible for managing user sessions and cook
 Furthermore, the auth server handles OTP management, enabling the generation and validation of one-time passwords for additional security measures. This functionality is commonly used for two-factor authentication (2FA) or account recovery processes, adding an extra layer of security to user accounts.
 Overall, the auth server plays a crucial role in ensuring the security and integrity of the system by managing authentication processes, integrating social login options, handling session management, and facilitating OTP-based authentication. Its robust functionality streamlines user authentication and enhances the overall security posture of the application.
 
+## Application Documentation
+https://www.postman.com/rohit-zip/workspace/bloggios/collection/34920421-dbc22257-2de7-4888-a0b1-69d0234bb3b4
+
 ### Software Required
 
 - Java 17

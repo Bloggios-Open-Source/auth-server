@@ -4,7 +4,6 @@ import com.bloggios.authserver.constants.EnvironmentConstants;
 import com.bloggios.authserver.constants.ServiceConstants;
 import com.bloggios.authserver.payload.request.RegisterOtpMailRequest;
 import com.bloggios.authserver.payload.response.ApplicationResponse;
-import feign.Headers;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

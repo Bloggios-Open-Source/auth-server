@@ -8,7 +8,6 @@ import com.bloggios.authserver.payload.response.AuthResponse;
 import com.bloggios.authserver.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +33,13 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     *
+     * Endpoint to register new user
+     * @param registerRequest
+     * @param httpServletRequest
+     * @return
+     */
     @PostMapping(EndpointConstants.AuthenticationController.REGISTER_USER)
     public ResponseEntity<ApplicationResponse> registerUser(
             @RequestBody RegisterRequest registerRequest,
@@ -42,6 +48,14 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.registerUser(registerRequest, httpServletRequest));
     }
 
+    /**
+     *
+     * Endpoint to login user
+     * @param loginRequest
+     * @param request
+     * @param response
+     * @return
+     */
     @PostMapping(EndpointConstants.AuthenticationController.LOGIN_USER)
     public ResponseEntity<AuthResponse> loginUser(
             @RequestBody LoginRequest loginRequest,
@@ -53,8 +67,20 @@ public class AuthenticationController {
         return ResponseEntity.ok(authResponse);
     }
 
+    /**
+     *
+     * Endpoint to verify OTP of new user
+     * @param otp
+     * @param userId
+     * @return
+     */
     @GetMapping(EndpointConstants.AuthenticationController.VERIFY_OTP)
     public ResponseEntity<ApplicationResponse> verifyOtp(@RequestHeader("otp") String otp, @RequestParam String userId) {
         return ResponseEntity.ok(authenticationService.verifyOtp(otp, userId));
+    }
+
+    @GetMapping(EndpointConstants.AuthenticationController.RESEND_OTP)
+    public ResponseEntity<ApplicationResponse> resendOtp(@RequestParam String email) {
+        return ResponseEntity.ok(authenticationService.resendOtp(email));
     }
 }

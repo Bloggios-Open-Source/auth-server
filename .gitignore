@@ -33,3 +33,8 @@ build/
 .vscode/
 
 !**/src/main/**/certificates/
+
+
+## AppMap ##
+tmp
+appmap.yml

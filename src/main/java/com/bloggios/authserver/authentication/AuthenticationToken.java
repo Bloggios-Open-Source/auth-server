@@ -38,6 +38,7 @@ import java.util.Collection;
  */
 
 public class AuthenticationToken extends UsernamePasswordAuthenticationToken {
+
     public AuthenticationToken(Object principal, Object credentials) {
         super(principal, credentials);
     }

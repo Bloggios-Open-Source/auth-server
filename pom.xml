@@ -218,6 +218,7 @@
                 </executions>
                 <configuration>
                     <excludes>
+                        <exclude>com/bloggios/authserver/authentication/**</exclude>
                         <exclude>com/bloggios/authserver/constants/**</exclude>
                         <exclude>com/bloggios/authserver/entity/**</exclude>
                         <exclude>com/bloggios/authserver/enums/**</exclude>
